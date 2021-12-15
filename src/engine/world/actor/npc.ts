@@ -170,7 +170,8 @@ export class Npc extends Actor {
         activeWorld.deregisterNpc(this);
 
         if(respawn) {
-            activeWorld.scheduleNpcRespawn(new Npc(findNpc(this.id), this.npcSpawn));
+            const npc = findNpc(this.id);
+            if (npc.respawnTime) activeWorld.scheduleNpcRespawn(new Npc(npc, this.npcSpawn), npc.respawnTime);
         }
     }
 

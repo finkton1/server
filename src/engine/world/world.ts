@@ -476,8 +476,9 @@ export class World {
         await lastValueFrom(this.tickComplete.asObservable().pipe(take(count)));
     }
 
-    public async scheduleNpcRespawn(npc: Npc): Promise<boolean> {
-        await schedule(10);
+    public async scheduleNpcRespawn(npc: Npc, respawnTime?: number): Promise<boolean> {
+        const respawn: number = respawnTime ? respawnTime : 10;
+        await schedule(respawn);
         return await this.registerNpc(npc);
     }
 

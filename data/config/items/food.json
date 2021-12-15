@@ -54,6 +54,10 @@
             }
         }
     },
+    "rs:raw_chicken": {
+        "extends": "rs:food",
+        "game_id": 2138
+    },
     "rs:anchovies": {
         "extends": "rs:food",
         "game_id": 319,
