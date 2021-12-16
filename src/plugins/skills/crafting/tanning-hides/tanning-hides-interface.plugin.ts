@@ -1,13 +1,12 @@
 
-import { NpcInteractionAction, NpcInteractionActionHook } from '@engine/world/action/npc-interaction.action';
-import { ButtonAction, buttonActionHandler, ButtonActionHook } from '@engine/world/action/button.action';
+
 import { widgets } from '@engine/config';
-import { TaskExecutor } from '@engine/world/action';
 import { colors } from '@engine/util/colors';
 import { findItem } from '@engine/config';
 import { Player } from '@engine/world/actor/player/player';
 
 import { widgetButtonIds, widgetModelSlots, TanableHide } from './tanning-hides-constants';
+import { ButtonAction, ButtonActionHook, NpcInteractionAction, NpcInteractionActionHook, TaskExecutor } from '@engine/action';
 
 /**
  * Opens the "Tan Hides" interface
