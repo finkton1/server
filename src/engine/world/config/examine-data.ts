@@ -16,6 +16,7 @@ export class ExamineCache {
         logger.info('Parsing examine data...');
         this.items = parseData('data/config/examine-item-data.yaml');
         this.npcs = new Map<number, Examine>();
+        this.npcs = parseData('data/config/examine-npc-data.yaml');
         this.objects = new Map<number, Examine>();
     }
 

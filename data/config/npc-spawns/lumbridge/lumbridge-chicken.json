@@ -1,0 +1,56 @@
+[
+    {
+        "npc": "rs:chicken",
+        "spawn_x": 3230,
+        "spawn_y": 3299,
+        "movement_radius": 1
+    },
+    {
+        "npc": "rs:chicken",
+        "spawn_x": 3231,
+        "spawn_y": 3298,
+        "movement_radius": 1
+    }
+    ,
+    {
+        "npc": "rs:chicken",
+        "spawn_x": 3229,
+        "spawn_y": 3298,
+        "movement_radius": 1
+    }
+    ,
+    {
+        "npc": "rs:chicken",
+        "spawn_x": 3226,
+        "spawn_y": 3296,
+        "movement_radius": 1
+    }
+    ,
+    {
+        "npc": "rs:chicken",
+        "spawn_x": 3233,
+        "spawn_y": 3294,
+        "movement_radius": 1
+    }
+    ,
+    {
+        "npc": "rs:chicken",
+        "spawn_x": 3233,
+        "spawn_y": 3300,
+        "movement_radius": 1
+    }
+    ,
+    {
+        "npc": "rs:chicken",
+        "spawn_x": 3227,
+        "spawn_y": 3300,
+        "movement_radius": 1
+    }
+    ,
+    {
+        "npc": "rs:chicken",
+        "spawn_x": 3230,
+        "spawn_y": 3296,
+        "movement_radius": 1
+    }
+]
