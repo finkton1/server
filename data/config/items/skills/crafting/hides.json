@@ -1,0 +1,6 @@
+{
+    "rs:cowhide": {
+        "extends": "rs:hides_base",
+        "game_id": 1739
+    }
+}

@@ -1,0 +1,12 @@
+[
+    {
+        "npc": "rs:fishing_spot_draynor",
+        "spawn_x": 3085,
+        "spawn_y": 3231
+    },
+    {
+        "npc": "rs:fishing_spot_draynor",
+        "spawn_x": 3085,
+        "spawn_y": 3230
+    }
+]

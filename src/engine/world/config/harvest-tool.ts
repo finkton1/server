@@ -27,6 +27,14 @@ export enum Axe {
     DRAGON
 }
 
+export enum FishingEquipment {
+    SMALL_FISHING_NET
+}
+
+const fishingEquipment: HarvestTool[] = [
+    { itemId: 303, level: 1, animation: 625 }
+];
+
 
 const Pickaxes: HarvestTool[] = [
     { itemId: 1265, level: 1, animation: 625 },
@@ -86,4 +94,8 @@ export function getPickaxe(pickaxe: Pickaxe): HarvestTool {
 
 export function getAxe(axe: Axe): HarvestTool {
     return Axes[axe];
+}
+
+export function getFishingEquipment(equipment: FishingEquipment): HarvestTool {
+    return fishingEquipment[equipment];
 }

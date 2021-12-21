@@ -27,5 +27,11 @@ export const animationIds = {
         armBlock: 424
     },
     fadeOut: 3541,
-    fadeIn: 2115
+    fadeIn: 2115,
+    fishing: {
+        smallFishingNet: 621,
+        bigFishingNet: 620,
+        fishingRod: 623,
+        flyFishingRod: 622
+    }
 };

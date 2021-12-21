@@ -70,5 +70,8 @@ export const soundIds = {
             noArmorHitPlayer: 519,
             noArmorHit: 511
         }
+    },
+    fishing: {
+        fishing: 2600
     }
 };

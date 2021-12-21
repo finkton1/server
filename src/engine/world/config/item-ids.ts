@@ -543,5 +543,15 @@ export const itemIds = {
         red_d_leather: 2507,
         black_d_leather: 2509,
         snakeskin: 6289
+    },
+    fishing: {
+        small_fishing_net: 303,
+        big_fishing_net: 305,
+        fishing_rod: 307,
+        fly_fishing_rod: 309,
+        harpoon: 311,
+        lobster_pot: 301,
+        oily_fishing_rod: 1585,
+        karambwan_vessel: 3157
     }
 };
