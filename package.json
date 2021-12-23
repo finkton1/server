@@ -40,6 +40,12 @@
     },
     "homepage": "https://github.com/runejs/server#readme",
     "dependencies": {
+        "@babel/cli": "^7.14.5",
+        "@babel/core": "^7.10.2",
+        "@babel/node": "^7.12.1",
+        "@babel/plugin-proposal-class-properties": "^7.10.1",
+        "@babel/preset-env": "^7.10.2",
+        "@babel/preset-typescript": "^7.10.1",
         "@runejs/core": "^1.5.4",
         "@runejs/filestore": "^0.15.2",
         "@runejs/login-server": "^1.2.2",

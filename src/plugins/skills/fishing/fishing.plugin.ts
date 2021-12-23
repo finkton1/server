@@ -1,13 +1,15 @@
-import { ItemOnNpcAction, itemOnNpcActionHandler, ItemOnNpcActionHook, NpcInteractionAction, NpcInteractionActionHook, ObjectInteractionAction, TaskExecutor } from "@engine/action";
-import { logger } from "@runejs/core";
+import { ItemOnNpcAction, itemOnNpcActionHandler, ItemOnNpcActionHook, NpcInteractionAction, NpcInteractionActionHook, ObjectInteractionAction, TaskExecutor } from '@engine/action';
+import { logger } from '@runejs/core';
 import { itemIds } from '@engine/world/config/item-ids';
-import { canInitiateHarvest } from "@engine/world/skill-util/harvest-skill";
-import { Skill } from "@engine/world/actor/skills";
-import { findItem } from "@engine/config";
-import { equipment, findEquipment, findSpot, IFishingSpots, IFishingEquipment } from "./fishing.constants";
-import { randomBetween } from "@engine/util";
-import { activeWorld, World } from "@engine/world";
-import { soundIds } from "@engine/world/config/sound-ids";
+import { canInitiateHarvest } from '@engine/world/skill-util/harvest-skill';
+import { Skill } from '@engine/world/actor/skills';
+import { findItem } from '@engine/config';
+import { equipment, findEquipment, findSpot, IFishingSpots, IFishingEquipment, ICascadeRates } from './fishing.constants';
+import { randomBetween } from '@engine/util';
+import { activeWorld, World } from '@engine/world';
+import { soundIds } from '@engine/world/config/sound-ids';
+import { playerWalkTo } from '@engine/plugins';
+import { cascadeInterpolate, interpolate, interpolateNonCascade, pickItem } from './fishing-utils';
 
 
 
@@ -31,6 +33,12 @@ const startFishingByItem = (task: TaskExecutor<ItemOnNpcAction>, taskIteration: 
     if (!player.hasItemInInventory(item.itemId)) {
         player.sendMessage(`You do not have a ${ findItem(toolToUse.id).name } to fish with.`);
         return false;
+    }
+
+    const level = player.skills.get(Skill.FISHING).level;
+    if (level < toolToUse.levelRequired) {
+        player.sendMessage(`You need a fishing level of ${toolToUse.levelRequired} to use a ${ findItem(toolToUse.id).name } at this spot.`, true);
+        return;
     }
 
     task.session.tool = toolToUse;
@@ -68,14 +76,27 @@ const startFishingByInteraction = (task: TaskExecutor<NpcInteractionAction>, tas
         return false;
     }
 
-    task.session.tool = toolToUse;
-    task.session.spot = spot;
+    const level = player.skills.get(Skill.FISHING).level;
+    if (level < toolToUse.levelRequired) {
+        player.sendMessage(`You need a fishing level of ${toolToUse.levelRequired} to use a ${ findItem(toolToUse.id).name } at this spot.`, true);
+        return;
+    }
 
     if(taskIteration === 0) {
         // First run
         player.sendMessage(`You cast out your ${findItem(toolToUse.id).name}.`);
         player.playSound(soundIds.fishing.fishing, 7, 0);
         player.playAnimation(toolToUse.animationId);
+      
+        if (spot.isCascade) {
+            task.session.spotSuccessChances = cascadeInterpolate(spot.possibleFish, player.skills.fishing.level, toolToUse.id);
+        } else {
+            task.session.spotSuccessChances = interpolateNonCascade(player.skills.fishing.level, spot.possibleFish[0], toolToUse.id);
+        }
+         
+        task.session.tool = toolToUse;
+        task.session.spot = spot;
+        logger.info('Spot success chances: ' + JSON.stringify(task.session.spotSuccessChances));
     }
 
     return true;
@@ -89,47 +110,46 @@ const activate = (task: TaskExecutor<ItemOnNpcAction>, taskIteration: number): b
 
     const spot: IFishingSpots = session.spot;
     const tool: IFishingEquipment = session.tool;
-     // Cancel if the actor no longer has their tool or level requirements.
-     if(!tool || !spot) {
+    const successChances: ICascadeRates[] = session.spotSuccessChances;
+
+    // Cancel if the actor no longer has their tool or level requirements.
+    if(!tool || !spot) {
         return false;
     }
     // Make sure the fishing spot exists
     const targetedSpot = activeWorld.findNearbyNpcsById(player.position, npc.id, 1);
-
+    // logger.info('the spot: ' + JSON.stringify(spot));
     if(!targetedSpot) {
         // Fishing spot went away cancel this action.
         return false;
     }
 
-    if(taskIteration % 4 === 0 && taskIteration != 0) {
-        const successChance = randomBetween(0, 255);
-        const percentNeeded = spot.baseChance + player.skills.fishing.level;
-    
-        if(successChance <= percentNeeded) {
+    if(taskIteration % 5 === 0 && taskIteration != 0) {
 
+        const itemRoll = pickItem(successChances);
+
+        if (!itemRoll) {
+            logger.info('This roll failed, lets try next roll...');
+            return;
+        }
+
+        if (itemRoll) {
+            logger.info(`we should recieve a ${findItem(itemRoll.id).name}`)
             if (player.inventory.hasSpace()) {
-                player.inventory.add(317);
-                player.sendMessage(`You catch some shrimps.`);
+                player.inventory.add(itemRoll.id);
+                player.sendMessage(`You catch some ${findItem(itemRoll.id).name}.`);
             } else {
-                player.sendMessage(
-                    `Your inventory is too full to hold any more shrimps.`, true);
+                player.sendMessage(`Your inventory is too full to hold any more ${findItem(itemRoll.id).name}.`, true);
                 player.playSound(soundIds.inventoryFull);
                 return false;
             }
-      
-   
-        } else {
-
         }
     
     }
 
-    if(taskIteration % 4 === 0 && taskIteration !== 0) {
+    if(taskIteration % 3 === 0 && taskIteration !== 0) {
         player.playAnimation(tool.animationId);
     }
-
-
-
 
     return true;
 };
@@ -138,6 +158,10 @@ const onComplete = (task: TaskExecutor<ObjectInteractionAction>): void => {
     const { player } = task.actionData;
     player.stopAnimation();
 };
+
+
+
+
 
 
 export default {
